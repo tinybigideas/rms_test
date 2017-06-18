@@ -1,0 +1,185 @@
+
+
+<!--
+
+* 
+
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>RMS Test: Angular1</title>
+
+        <!-- CSS -->
+        <link rel="stylesheet" type="text/css" href="styles/style.css" />
+        <!-- !CSS -->
+
+    </head>
+    
+    <body ng-app="rmsApp">
+
+        <div
+            class="b-wrapper"
+            ng-controller="mainCtrl">
+
+            <div class="b-filter-bar">
+
+                <form class="b-form" role="form" name="searchForm">
+                
+                    <div class="b-form__group">
+                        <input
+                            type="text"
+                            class="b-form__control"
+                            placeholder="Search comments..."
+                            minlength="3"
+                            autofocus="autofocus"
+                            ng-model="state.searchQuery.email"
+                            ng-model-options="{debounce: 300}"
+                            ng-change="searchEmailFilter(state.searchQuery.email)">
+
+                        <p
+                            ng-if="searchForm.$invalid"
+                            class="ng-cloak b-form__feedback">Ah! Please enter 3 or more characters.</p>
+                    </div>
+                </form>
+
+                <div class="b-form--show-extra">
+                    <a
+                        href="#"
+                        ng-click="toggleExtraStuff()"
+                        ng-bind="((state.extraStuff) ? 'Hide' : 'Show') + ' other filters'">
+                    </a>
+                </div>
+
+                <div
+                    class="b-form__extra-stuff"
+                    ng-show="state.extraStuff">
+
+                    <hr class="b-separator">
+
+                    <p>Filter by sentiment:</p>
+                    <div class="b-form__group">
+                        <a
+                            href="#"
+                            class="b-sentiment b-sentiment--happy"
+                            ng-class="{'active': state.filterBySentiment === 'happy'}"
+                            ng-click="filterBySentiment('happy')">
+                                :)
+                        </a>
+                        <a
+                            href="#"
+                            class="b-sentiment b-sentiment--sad"
+                            ng-class="{'active': state.filterBySentiment === 'sad'}"
+                            ng-click="filterBySentiment('sad')">
+                                :(
+                        </a>
+                        <div>
+                            <a
+                                href="#"
+                                ng-click="resetData()">
+                                Reset filter
+                            </a>
+                        </div>
+                    </div>
+
+                    <hr class="b-separator">
+
+                    <form
+                        class="b-form"
+                        role="form"
+                        name="addCommentForm"
+                        ng-submit="addComment(addCommentForm.$valid, comment); comment = null"
+                        novalidate>
+
+                        <div class="b-form__group">
+                            <input
+                                type="email"
+                                name="email"
+                                class="b-form__control"
+                                placeholder="john@rms.com"
+                                ng-model="comment.email"
+                                ng-pattern="state.emailPattern"
+                                required>
+
+                            <p
+                                ng-if="addCommentForm.email.$invalid"
+                                class="ng-cloak b-form__feedback">Ah! Please enter a valid <strong>@rms.com</strong> email address.</p>
+                        </div>
+
+                        <div class="b-form__group">
+                            <textarea
+                                rows="4"
+                                cols="50"
+                                name="body"
+                                class="b-form__control"
+                                placeholder="Comments..."
+                                ng-model="comment.body"
+                                required>
+                            </textarea>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="b-btn"
+                            ng-disabled="addCommentForm.$invalid">
+                            
+                            Add new comment
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+
+            <div class="b-page">
+
+                <!-- zero data alert -->
+                <div
+                    class="ng-cloak b-page__alert animate-fade"
+                    ng-if="!state.loading && (state.comments | filter:state.searchQuery).length === 0">
+
+                    <p><strong>Oops!</strong> There are no comments available<span ng-if="state.searchQuery.email"> matching your search term '<strong>{{state.searchQuery.email}}</strong>'. <a href="#" ng-click="resetData()">Reset search</a></span></p>
+                </div>
+                <!-- !zero data alert -->
+
+                <div
+                    class="ng-cloak animate-fade" 
+                    ng-if="(state.comments | filter:state.searchQuery).length > 0">
+
+                    <div class="b-page__header">
+                        <small>{{state.sentiment.happy | percentageFilter:state.comments}}</small> <div class="b-sentiment b-sentiment--happy">:)</div>
+                        
+                        <h1 class="b-page__header-text">Sentiment Analysis</h1>
+                        
+                        <div class="b-sentiment b-sentiment--sad">:(</div> <small>{{state.sentiment.sad | percentageFilter:state.comments}}</small>
+                        
+                        <p ng-if="state.searchQuery.email">We've found <strong>{{(state.comments | filter:state.searchQuery).length}}</strong> comment(s) matching your search term.</p>
+                    </div>
+
+                    <div class="b-things animate-fade">
+
+                        <comment-item
+                            style="animation-delay: {{($index > 20) ? 0 : $index * 0.050}}s"
+                            ng-repeat="item in state.filteredComments | limitTo:state.displayLimit track by $index"
+                            item="item">
+                        </comment-item> 
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- javascript -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+        <!-- !javascript -->
+
+    </body>
+
+</html>
