@@ -1,4 +1,3 @@
-
 //  Task
 //   1. Create a visually appealing display for the data in ctrl.comments using js+scss/css. 
 //      Look up whatever you would like, but the final product must not rely on any imports not 
@@ -153,11 +152,12 @@ function mainCtrl($scope, $timeout, $filter, CommentService) {
     };
 
     // handle add comment click
-    $scope.addComment = function(isValid, comment) {
+    $scope.addComment = function(isValid, comment, form) {
         if (isValid) {
             comment.sentiment = ((Math.floor(Math.random() * 10) + 1) > 5) ? 'happy' : 'sad';
             $scope.state.comments.unshift(comment);
             $scope.resetData();
+            form.$setPristine();
         }
     };
 
@@ -242,5 +242,3 @@ var app = angular.module('rmsApp', ['ngAnimate'])
             }
         };
     }]);
-
-

@@ -91,7 +91,7 @@
                         class="b-form"
                         role="form"
                         name="addCommentForm"
-                        ng-submit="addComment(addCommentForm.$valid, comment); comment = null"
+                        ng-submit="addComment(addCommentForm.$valid, comment, addCommentForm); comment = null"
                         novalidate>
 
                         <div class="b-form__group">
@@ -105,7 +105,7 @@
                                 required>
 
                             <p
-                                ng-if="addCommentForm.email.$invalid"
+                                ng-if="addCommentForm.email.$dirty && addCommentForm.email.$invalid"
                                 class="ng-cloak b-form__feedback">Ah! Please enter a valid <strong>@rms.com</strong> email address.</p>
                         </div>
 
@@ -177,7 +177,6 @@
         <!-- javascript -->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.js"></script>
-        <script type="text/javascript" src="js/app.js"></script>
         <!-- !javascript -->
 
     </body>
